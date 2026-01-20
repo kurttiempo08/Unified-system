@@ -26,6 +26,7 @@ export default function BasicTableOne() {
   const [beneData, setBeneData] = useState<Bene[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [searched, setSearched] = useState(false);
   const [searchHHID, setSearchHHID] = useState("");
 
   const handleOpenModal = (bene: Bene) => {
@@ -47,6 +48,25 @@ export default function BasicTableOne() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSearch = async () => {
+  if (!searchHHID.trim()) return;
+
+  setLoading(true);
+  setSearched(true);
+
+  try {
+    const response = await fetch(
+      `http://localhost:8000/api/beneficiaries?hhid=${searchHHID}`
+    );
+    const data: Bene[] = await response.json();
+    setBeneData(data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSave = async () => {
   if (!selectedBene) return;
@@ -76,12 +96,12 @@ export default function BasicTableOne() {
   }
 };
 
-  useEffect(() => {
-    fetch("http://localhost:8000/api/beneficiaries")
-      .then((res) => res.json())
-      .then((data: Bene[]) => setBeneData(data))
-      .catch((err) => console.error(err));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/api/beneficiaries")
+  //     .then((res) => res.json())
+  //     .then((data: Bene[]) => setBeneData(data))
+  //     .catch((err) => console.error(err));
+  // }, []);
 
     // 🔍 Filter logic
   const filteredData = beneData.filter((bene) =>
@@ -121,17 +141,17 @@ export default function BasicTableOne() {
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Search HHID..."
+                placeholder="Enter HHID"
                 value={searchHHID}
                 onChange={(e) => setSearchHHID(e.target.value)}
                 className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
-              <Button size="sm" variant="primary">
+              <Button size="sm" variant="primary" onClick={handleSearch}>
                 Search
               </Button>
             </div>
           </div>
-        {!loading && !error && (
+        {beneData.length > 0 && (
           <Table>
             {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -178,8 +198,12 @@ export default function BasicTableOne() {
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {loading && (
-              <div className="p-4 text-sm text-gray-500 dark:text-gray-400">
-                Loading data...
+              <div className="p-4 text-gray-500 text-sm">Searching...</div>
+            )}
+
+            {searched && !loading && beneData.length === 0 && (
+              <div className="p-4 text-gray-500 text-sm">
+                No beneficiary found
               </div>
             )}
 
