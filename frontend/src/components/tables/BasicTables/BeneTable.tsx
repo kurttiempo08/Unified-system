@@ -17,6 +17,16 @@ interface Bene {
   LAST_NAME: string;
   MID_NAME: string;
   EXT_NAME: string;
+  YEAR_GRADUATED: string;
+  HIGHEST_EDUC_ATTAINMENT: string;
+  ACADEMIC_DISTINCTION: string;
+  EMPLOYED: string;
+  COMPANY_REFERRED: string;
+  FACILITY_EMPLOYMENT: string;
+  CURRENT_AGENCY: string;
+  POSITION: string;
+  PRC_LICENSED_HOLDER: string;
+  SPECIFIC_LICENSURE_EXAM: string;
 }
 
 
@@ -40,7 +50,7 @@ export default function BasicTableOne() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     if (!selectedBene) return;
     setSelectedBene({
@@ -259,32 +269,32 @@ export default function BasicTableOne() {
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
                   HHID : {selectedBene.HOUSEHOLD_ID}
                 </label>
-                <input
+                {/* <input
                   value={selectedBene.HOUSEHOLD_ID}
                   disabled
                   className="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                />
+                /> */}
               </div>
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
                   Fullname: {selectedBene.FIRST_NAME} {selectedBene.MID_NAME} {selectedBene.LAST_NAME} {selectedBene.EXT_NAME}
                 </label>
-                <input
+                {/* <input
                   name="firstname"
                   value={selectedBene.FIRST_NAME}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
-                />
+                /> */}
               </div>
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
-                  Middlename
+                  Year Graduated
                 </label>
                 <input
-                  name="middlename"
-                  value={selectedBene.MID_NAME}
+                  name="year_graduated"
+                  value={selectedBene.YEAR_GRADUATED}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
                 />
@@ -292,11 +302,66 @@ export default function BasicTableOne() {
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
-                  Lastname
+                  Highest Educational Attainment
+                </label>
+                <select
+                  name="highest_educ_attainment"
+                  value={selectedBene.HIGHEST_EDUC_ATTAINMENT}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
+                  <option value="">Select</option>
+                  <option value="DCC LEVEL">DCC LEVEL</option>
+                  <option value="DCC GRADUATE">DCC GRADUATE</option>
+                  <option value="ELEMENTARY LEVEL">ELEMENTARY LEVEL</option>
+                  <option value="ELEMENTARY GRADUATE">ELEMENTARY GRADUATE</option>
+                  <option value="HIGHSCHOOL LEVEL">HIGHSCHOOL LEVEL</option>
+                  <option value="JUNIOR HIGHSCHOOL">JUNIOR HIGHSCHOOL</option>
+                  <option value="SENIOR HIGHSCHOOL">SENIOR HIGHSCHOOL</option>
+                  <option value="SENIOR HIGHSCHOOL GRADUATE">SENIOR HIGHSCHOOL GRADUATE</option>
+                  <option value="COLLEGE LEVEL">COLLEGE LEVEL</option>
+                  <option value="COLLEGE GRADUATE">COLLEGE GRADUATE</option>
+                  <option value="VOCATIONAL">VOCATIONAL</option>
+                  <option value="VOCATIONAL GRADUATE">VOCATIONAL GRADUATE</option>
+                  <option value="ALS">ALS</option>
+                  <option value="ALS GRADUATE">ALS GRADUATE</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Academic Distinction
                 </label>
                 <input
-                  name="lastname"
-                  value={selectedBene.LAST_NAME}
+                  name="academic_distinction"
+                  value={selectedBene.ACADEMIC_DISTINCTION}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
+                />
+              </div>
+
+             <div>
+              <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                Employed
+              </label>
+
+              <select
+                name="EMPLOYED"
+                value={selectedBene.EMPLOYED}
+                onChange={handleChange}
+                className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
+                <option value="">Select</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Company Referred
+                </label>
+                <input
+                  name="company_referred"
+                  value={selectedBene.COMPANY_REFERRED}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
                 />
@@ -304,11 +369,54 @@ export default function BasicTableOne() {
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
-                  Ext. Name
+                  Facilitated
+                </label>
+                <select
+                  name="facilitated"
+                  value={selectedBene.FACILITY_EMPLOYMENT}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
+                  <option value="">Select</option>
+                  <option value="YES">YES</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Position
                 </label>
                 <input
-                  name="ext_name"
-                  value={selectedBene.EXT_NAME}
+                  name="position"
+                  value={selectedBene.POSITION}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  PRC License
+                </label>
+                <select 
+                  name="prc_licensed_holder"
+                  value={selectedBene.PRC_LICENSED_HOLDER}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
+                    <option value="">Select</option>
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Licensure Exam
+                </label>
+                <input
+                  name="licensure_exam"
+                  value={selectedBene.SPECIFIC_LICENSURE_EXAM}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
                 />
