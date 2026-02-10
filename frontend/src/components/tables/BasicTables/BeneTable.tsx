@@ -27,6 +27,7 @@ interface Bene {
   POSITION: string;
   PRC_LICENSED_HOLDER: string;
   SPECIFIC_LICENSURE_EXAM: string;
+  USER_ID: number;
 }
 
 
@@ -80,8 +81,10 @@ export default function BasicTableOne() {
 
   const handleSave = async () => {
   if (!selectedBene) return;
-
+  selectedBene.USER_ID = 326;
+  
   try {
+    console.log(selectedBene);
     await fetch(
       `http://localhost:8000/api/beneficiaries/${selectedBene.roster_id}`,
       {
@@ -264,28 +267,17 @@ export default function BasicTableOne() {
               Update Beneficiary
             </h2>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
                   HHID : {selectedBene.HOUSEHOLD_ID}
                 </label>
-                {/* <input
-                  value={selectedBene.HOUSEHOLD_ID}
-                  disabled
-                  className="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                /> */}
               </div>
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
                   Fullname: {selectedBene.FIRST_NAME} {selectedBene.MID_NAME} {selectedBene.LAST_NAME} {selectedBene.EXT_NAME}
                 </label>
-                {/* <input
-                  name="firstname"
-                  value={selectedBene.FIRST_NAME}
-                  onChange={handleChange}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
-                /> */}
               </div>
 
               <div>
@@ -293,7 +285,7 @@ export default function BasicTableOne() {
                   Year Graduated
                 </label>
                 <input
-                  name="year_graduated"
+                  name="YEAR_GRADUATED"
                   value={selectedBene.YEAR_GRADUATED}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
@@ -302,10 +294,10 @@ export default function BasicTableOne() {
 
               <div>
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
-                  Highest Educational Attainment
+                  Highest Attainment
                 </label>
                 <select
-                  name="highest_educ_attainment"
+                  name="HIGHEST_EDUC_ATTAINMENT"
                   value={selectedBene.HIGHEST_EDUC_ATTAINMENT}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
@@ -332,7 +324,7 @@ export default function BasicTableOne() {
                   Academic Distinction
                 </label>
                 <input
-                  name="academic_distinction"
+                  name="ACADEMIC_DISTINCTION"
                   value={selectedBene.ACADEMIC_DISTINCTION}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
@@ -360,7 +352,7 @@ export default function BasicTableOne() {
                   Company Referred
                 </label>
                 <input
-                  name="company_referred"
+                  name="COMPANY_REFERRED"
                   value={selectedBene.COMPANY_REFERRED}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
@@ -372,7 +364,7 @@ export default function BasicTableOne() {
                   Facilitated
                 </label>
                 <select
-                  name="facilitated"
+                  name="FACILITY_EMPLOYMENT"
                   value={selectedBene.FACILITY_EMPLOYMENT}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
@@ -387,7 +379,7 @@ export default function BasicTableOne() {
                   Position
                 </label>
                 <input
-                  name="position"
+                  name="POSITION"
                   value={selectedBene.POSITION}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
@@ -399,7 +391,7 @@ export default function BasicTableOne() {
                   PRC License
                 </label>
                 <select 
-                  name="prc_licensed_holder"
+                  name="PRC_LICENSED_HOLDER"
                   value={selectedBene.PRC_LICENSED_HOLDER}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
@@ -415,7 +407,7 @@ export default function BasicTableOne() {
                   Licensure Exam
                 </label>
                 <input
-                  name="licensure_exam"
+                  name="SPECIFIC_LICENSURE_EXAM"
                   value={selectedBene.SPECIFIC_LICENSURE_EXAM}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
