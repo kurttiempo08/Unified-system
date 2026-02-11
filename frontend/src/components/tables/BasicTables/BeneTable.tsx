@@ -9,6 +9,7 @@ import {
 import Button from "../../ui/button/Button";
 import { FileIcon } from "../../../icons";
 import Modal from "../../modal/Modal";
+import toast from "react-hot-toast";
 
 interface Bene {
   roster_id: number;
@@ -61,7 +62,11 @@ export default function BasicTableOne() {
   };
 
   const handleSearch = async () => {
-  if (!searchHHID.trim()) return;
+  if (!searchHHID.trim()){
+    toast.error("Please enter an HHID");
+    setBeneData([]);
+    return;
+  }
 
   setLoading(true);
   setSearched(true);
@@ -354,6 +359,18 @@ export default function BasicTableOne() {
                 <input
                   name="COMPANY_REFERRED"
                   value={selectedBene.COMPANY_REFERRED}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Current Agency
+                </label>
+                <input
+                  name="CURRENT_AGENCY"
+                  value={selectedBene.CURRENT_AGENCY}
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
                 />
