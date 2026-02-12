@@ -76,6 +76,12 @@ export default function BasicTableOne() {
       `http://localhost:8000/api/beneficiaries?hhid=${searchHHID}`
     );
     const data: Bene[] = await response.json();
+    if (data.length === 0) {
+      toast.error("No beneficiary found");
+    } else {
+      toast.success(`${data.length} record(s) found`);
+    }
+    console.log(data);
     setBeneData(data);
   } catch (error) {
     console.error(error);
@@ -107,9 +113,10 @@ export default function BasicTableOne() {
         b.roster_id === selectedBene.roster_id ? selectedBene : b
       )
     );
-
     handleCloseModal();
+    toast.success("Successfully Updated.");
   } catch (error) {
+    toast.error("Update failed.");
     console.error("Update failed:", error);
   }
 };
