@@ -70,5 +70,4 @@ app.put("/api/beneficiaries/:id", async (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
-  console.log(`🚀 Test running on http://localhost:${PORT}`);
 });
