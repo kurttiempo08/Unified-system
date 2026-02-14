@@ -272,7 +272,7 @@ export default function BasicTableOne() {
       </div>
 
       {/* Modal */}
-       <Modal isOpen={openModal} onClose={handleCloseModal}>
+       <Modal isOpen={openModal} onClose={handleCloseModal} width="max-w-xl">
         {selectedBene && (
           <>
             <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">
