@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "../../ui/table";
 import Button from "../../ui/button/Button";
-import { FileIcon } from "../../../icons";
+import { FileIcon,ListIcon } from "../../../icons";
 import Modal from "../../modal/Modal";
 import toast from "react-hot-toast";
 
@@ -34,6 +34,7 @@ interface Bene {
 
 export default function BasicTableOne() {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openSubModal, setSubOpenModal] = useState<boolean>(false);
   const [selectedBene, setSelectedBene] = useState<Bene | null>(null);
   const [beneData, setBeneData] = useState<Bene[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,6 +47,16 @@ export default function BasicTableOne() {
     setOpenModal(true);
   };
 
+  const handleSubOpenModal = (bene: Bene) => {
+    setSelectedBene({ ...bene }); // clone to allow editing
+    setSubOpenModal(true);
+  };
+
+  const handleSubCloseModal = () => {
+    setSubOpenModal(false);
+    setSelectedBene(null);
+  }
+  
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedBene(null);
@@ -75,6 +86,7 @@ export default function BasicTableOne() {
     const response = await fetch(
       `http://localhost:8000/api/beneficiaries?hhid=${searchHHID}`
     );
+    // await new Promise(resolve => setTimeout(resolve, 1000));
     const data: Bene[] = await response.json();
     if (data.length === 0) {
       toast.error("No beneficiary found");
@@ -171,8 +183,8 @@ export default function BasicTableOne() {
                 onChange={(e) => setSearchHHID(e.target.value)}
                 className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
-              <Button size="sm" variant="primary" onClick={handleSearch}>
-                Search
+              <Button size="sm" variant="primary" onClick={handleSearch} disabled={loading} className="px-4 py-2 bg-blue-600 text-white disabled:opacity-50">
+                {loading ? "Searching..." : "Search"}
               </Button>
             </div>
           </div>
@@ -223,7 +235,7 @@ export default function BasicTableOne() {
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {loading && (
-              <div className="p-4 text-gray-500 text-sm">Searching...</div>
+              <div className="p-4 text-gray-500 text-sm">Fetching data...</div>
             )}
 
             {searched && !loading && beneData.length === 0 && (
@@ -254,14 +266,26 @@ export default function BasicTableOne() {
                     {bene.EXT_NAME}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => handleOpenModal(bene)}
-                    >
-                      <FileIcon className="mr-1" />
-                      Update
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => handleOpenModal(bene)}
+                      >
+                        <FileIcon className="mr-1" />
+                        Update
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        onClick={() => handleSubOpenModal(bene)}
+                        // className="bg-green-600 hover:bg-green-700 text-white"
+                        variant="primary"
+                      >
+                        <ListIcon className="mr-1" />
+                        Add Subsidy
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -270,6 +294,14 @@ export default function BasicTableOne() {
           )}
         </div>
       </div>
+
+      <Modal isOpen={openSubModal} onClose={handleSubCloseModal} width="max-w-xl">
+         {selectedBene && (
+            <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">
+              Add Subsidy
+            </h2>
+         )}
+      </Modal>
 
       {/* Modal */}
        <Modal isOpen={openModal} onClose={handleCloseModal} width="max-w-xl">
@@ -335,12 +367,21 @@ export default function BasicTableOne() {
                 <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
                   Academic Distinction
                 </label>
-                <input
+                <select
                   name="ACADEMIC_DISTINCTION"
                   value={selectedBene.ACADEMIC_DISTINCTION}
                   onChange={handleChange}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
-                />
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white">
+                    <option value=""></option>
+                    <option value="With Honors">With Honors</option>
+                    <option value="With High Honors">With High Honors</option>
+                    <option value="With Highest Honors">With Highest Honors</option>
+                    <option value="Salutatorian">Salutatorian</option>
+                    <option value="Valedictorian">Valedictorian</option>
+                    <option value="Cum laude">Cum Laude</option>
+                    <option value="Magna Cum Laude">Magna Cum Laude</option>
+                    <option value="Summa Cum Laude">Summa Cum Laude</option>
+                </select>
               </div>
 
              <div>

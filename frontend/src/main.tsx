@@ -18,6 +18,9 @@ createRoot(document.getElementById("root")!).render(
           toastOptions={{
             duration: 3000,
           }}
+          containerStyle={{
+            zIndex: 99999,
+          }}
         />
       </AppWrapper>
     </ThemeProvider>
