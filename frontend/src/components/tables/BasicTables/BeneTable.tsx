@@ -29,6 +29,7 @@ interface Bene {
   PRC_LICENSED_HOLDER: string;
   SPECIFIC_LICENSURE_EXAM: string;
   USER_ID: number;
+  SUBSIDY: number;
 }
 
 
@@ -297,12 +298,41 @@ export default function BasicTableOne() {
         </div>
       </div>
 
-      <Modal isOpen={openSubModal} onClose={handleSubCloseModal} width="max-w-xl">
-         {selectedBene && (
-            <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">
+     <Modal isOpen={openSubModal} onClose={handleSubCloseModal} width="max-w-xl">
+        {selectedBene && (
+          <>
+            <h2 className="mb-6 text-xl font-semibold text-black dark:text-white">
               Add Subsidy
             </h2>
-         )}
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <div className="col-span-2">
+                <label className="mb-1 block text-sm text-gray-600 dark:text-gray-300">
+                  Subsidies
+                </label>
+
+                <select
+                  name="SUBSIDY"
+                  value={selectedBene.SUBSIDY}
+                  onChange={handleChange}
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-boxdark dark:text-white"
+                >
+                  <option value="">Select</option>
+                  <option value="EXPANDED STUDENTS GRANTS-IN-AID PROGRAM FOR PROVERTY ALLEVIATION">
+                    EXPANDED STUDENTS GRANTS-IN-AID PROGRAM FOR PROVERTY ALLEVIATION
+                  </option>
+                  <option value="TES">TES</option>
+                  <option value="TULONG DUNONG">TULONG DUNONG</option>
+                  <option value="PRIVATE SCHOLARSHIP">PRIVATE SCHOLARSHIP</option>
+                  <option value="SCHOOL-BASED SCHOLARSHIP">SCHOOL-BASED SCHOLARSHIP</option>
+                  <option value="OTHERS">OTHERS</option>
+                </select>
+              </div>
+
+            </div>
+          </>
+        )}
       </Modal>
 
       {/* Modal */}
