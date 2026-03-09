@@ -327,7 +327,15 @@ export default function BasicTableOne() {
                   <option value="OTHERS">OTHERS</option>
                 </select>
               </div>
-
+              
+            </div>
+            <div className="mt-6 flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSave}>
+                Add Subsidy
+              </Button>
             </div>
           </>
         )}
