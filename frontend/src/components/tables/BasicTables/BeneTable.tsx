@@ -43,6 +43,8 @@ export default function BasicTableOne() {
   const [searched, setSearched] = useState(false);
   const [searchHHID, setSearchHHID] = useState("");
 
+  console.log('testing')
+  console.log('tester')
   const handleOpenModal = (bene: Bene) => {
     setSelectedBene({ ...bene }); // clone to allow editing
     setOpenModal(true);
