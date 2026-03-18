@@ -53,6 +53,7 @@ export default function BasicTableOne() {
   const handleSubOpenModal = (bene: Bene) => {
     setSelectedBene({ ...bene }); // clone to allow editing
     setSubOpenModal(true);
+    getSubsidies();
   };
 
   const handleSubCloseModal = () => {
@@ -104,6 +105,14 @@ export default function BasicTableOne() {
     setLoading(false);
   }
 };
+
+const getSubsidies = async () => {
+  console.log(selectedBene);
+}
+
+const handleSubsidySave = async () => {
+  console.log(selectedBene);
+}
 
   const handleSave = async () => {
   if (!selectedBene) return;
@@ -335,7 +344,7 @@ export default function BasicTableOne() {
               <Button variant="outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={handleSave}>
+              <Button variant="primary" onClick={handleSubsidySave}>
                 Add Subsidy
               </Button>
             </div>

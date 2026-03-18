@@ -36,6 +36,20 @@ app.get("/api/beneficiaries", async (req: Request, res: Response) => {
   }
 });
 
+// Search subsidy
+app.get("/api/subsidies", async (req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM tbl_subsidy"
+    );
+
+    res.json(rows);
+  } catch (error: any) {
+    console.error("DB ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // ✅ UPDATE beneficiary (PUT)
 app.put("/api/beneficiaries/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
