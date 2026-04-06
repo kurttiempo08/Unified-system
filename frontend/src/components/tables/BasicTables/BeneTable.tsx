@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "../../ui/table";
 import Button from "../../ui/button/Button";
-import { FileIcon,ListIcon } from "../../../icons";
+import { FileIcon,ListIcon,AlertIcon } from "../../../icons";
 import Modal from "../../modal/Modal";
 import toast from "react-hot-toast";
 
@@ -30,12 +30,14 @@ interface Bene {
   SPECIFIC_LICENSURE_EXAM: string;
   USER_ID: number;
   SUBSIDY: number;
+  NO_DATA_TAG_BY: string;
 }
 
 
 export default function BasicTableOne() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openSubModal, setSubOpenModal] = useState<boolean>(false);
+  const [openTagModal, setTagOpenModal] = useState<boolean>(false);
   const [selectedBene, setSelectedBene] = useState<Bene | null>(null);
   const [beneData, setBeneData] = useState<Bene[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,6 +57,11 @@ export default function BasicTableOne() {
     setSubOpenModal(true);
   };
 
+    const handleTagOpenModal = (bene: Bene) => {
+    setSelectedBene({ ...bene }); // clone to allow editing
+    setTagOpenModal(true);
+  };
+
   const handleSubCloseModal = () => {
     setSubOpenModal(false);
     setSelectedBene(null);
@@ -64,6 +71,11 @@ export default function BasicTableOne() {
     setOpenModal(false);
     setSelectedBene(null);
   };
+
+  const handleTagCloseModal = () => {
+    setTagOpenModal(false);
+    setSelectedBene(null);
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -130,6 +142,37 @@ export default function BasicTableOne() {
     );
     handleCloseModal();
     toast.success("Successfully Updated.");
+  } catch (error) {
+    toast.error("Update failed.");
+    console.error("Update failed:", error);
+  }
+};
+
+  const handleTagSave = async () => {
+  if (!selectedBene) return;
+  selectedBene.USER_ID = 326;
+  selectedBene.NO_DATA_TAG_BY = "KURT J. TIEMPO";
+  try {
+    console.log(selectedBene);
+    await fetch(
+      `http://localhost:8000/api/tag/${selectedBene.roster_id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedBene),
+      }
+    );
+
+    // Update table data locally
+    setBeneData((prev) =>
+      prev.map((b) =>
+        b.roster_id === selectedBene.roster_id ? selectedBene : b
+      )
+    );
+    handleTagCloseModal();
+    toast.success("Successfully Tagged.");
   } catch (error) {
     toast.error("Update failed.");
     console.error("Update failed:", error);
@@ -288,6 +331,14 @@ export default function BasicTableOne() {
                         <ListIcon className="mr-1" />
                         Add Subsidy
                       </Button>
+
+                      <Button 
+                      size="sm" 
+                      onClick={() => handleTagOpenModal(bene)} 
+                      variant="primary">
+                        <AlertIcon className="mr-1" />
+                        Tag No data
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -297,6 +348,25 @@ export default function BasicTableOne() {
           )}
         </div>
       </div>
+      <Modal isOpen={openTagModal} onClose={handleSubCloseModal} width="max-w-xl">
+        {selectedBene && (
+          <>
+            <h2 className="mb-6 text-xl font-semibold text-black dark:text-white">
+              Are you sure you want to proceed with tagging this as “No Data”? This action is irreversible and cannot be modified in the future.
+            </h2>
+
+           
+            <div className="mt-6 flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleTagSave}>
+                Tag no data
+              </Button>
+            </div>
+          </>
+        )}
+      </Modal>
 
      <Modal isOpen={openSubModal} onClose={handleSubCloseModal} width="max-w-xl">
         {selectedBene && (

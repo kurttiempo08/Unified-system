@@ -67,6 +67,29 @@ app.put("/api/beneficiaries/:id", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Database error" });
   }
 });
+app.put("/api/tag/:id", async (req: Request, res: Response) =>{
+  const {id} = req.params;
+  const {NO_DATA_TAG_BY} = req.body;
+  try{
+    const [result]: any = await pool.query(
+      `UPDATE tbl_household_roster
+       SET NO_DATA = 'YES', NO_DATA_TAG_BY = ?
+       WHERE roster_id = ?`,
+       [NO_DATA_TAG_BY,id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Beneficiary not found",id,
+      });
+    }
+
+    res.json({ message: "Beneficiary tag successfully" });
+  }
+  catch(error){
+    console.error("❌ UPDATE ERROR:", error);
+    res.status(500).json({ message: "Database error" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
