@@ -31,6 +31,14 @@ interface Bene {
   USER_ID: number;
   SUBSIDY: number;
   NO_DATA_TAG_BY: string;
+  ENTRY_ID: string;
+}
+
+interface Subs {
+  subsidy_id: number;
+  subsidy_details: string;
+  subsidy_status: number;
+  tool_tip: string;
 }
 
 
@@ -40,21 +48,27 @@ export default function BasicTableOne() {
   const [openTagModal, setTagOpenModal] = useState<boolean>(false);
   const [selectedBene, setSelectedBene] = useState<Bene | null>(null);
   const [beneData, setBeneData] = useState<Bene[]>([]);
+
+  const [selectedSubs, setSelectedSubs] = useState<Subs | null>(null);
+  const [subData, setSubData] = useState<Subs[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
   const [searchHHID, setSearchHHID] = useState("");
 
-  console.log('testing')
-  console.log('tester')
+  
   const handleOpenModal = (bene: Bene) => {
     setSelectedBene({ ...bene }); // clone to allow editing
     setOpenModal(true);
   };
 
-  const handleSubOpenModal = (bene: Bene) => {
+  const handleSubOpenModal = (bene: Bene, sub: Subs) => {
+    handleGetSubsidy();
     setSelectedBene({ ...bene }); // clone to allow editing
+    setSelectedSubs({ ...sub});
     setSubOpenModal(true);
+    console.log(sub);
   };
 
     const handleTagOpenModal = (bene: Bene) => {
@@ -72,6 +86,11 @@ export default function BasicTableOne() {
     setSelectedBene(null);
   };
 
+  const handleCloseSubsidyModal = () => {
+    setSubOpenModal(false);
+    setSelectedBene(null);
+  }
+
   const handleTagCloseModal = () => {
     setTagOpenModal(false);
     setSelectedBene(null);
@@ -86,6 +105,23 @@ export default function BasicTableOne() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleGetSubsidy = async () => {
+     try {
+      const response = await fetch(
+        `http://localhost:8000/api/subsidies`
+      );
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      const data: Subs[] = await response.json();
+      if (data.length === 0) {
+        toast.error("No beneficiary found");
+      } 
+      console.log(data);
+      setSubData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleSearch = async () => {
   if (!searchHHID.trim()){
@@ -114,6 +150,50 @@ export default function BasicTableOne() {
     console.error(error);
   } finally {
     setLoading(false);
+  }
+};
+
+const handleSubsidySave = async () => {
+  if (!selectedBene) return;
+
+  const payload = {
+    subsidy_id_link: 1,
+    roster_id_link: selectedBene.roster_id,
+    entry_id_link: selectedBene.ENTRY_ID,
+    user_id: 326, // static or from logged-in user
+  };
+
+  try {
+    console.log(payload);
+
+    const res = await fetch(
+      `http://localhost:8000/api/subsidy-link`,
+      {
+        method: "POST", // ✅ changed from PUT to POST
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Insert failed");
+    }
+
+    // Optional: update UI (depends on your structure)
+    // setBeneData((prev) => [
+    //   ...prev,
+    //   { ...payload, roster_subsidy_id: data.insertedId },
+    // ]);
+
+    handleCloseSubsidyModal();
+    toast.success("Successfully Inserted.");
+  } catch (error) {
+    toast.error("Insert failed.");
+    console.error("Insert failed:", error);
   }
 };
 
@@ -405,7 +485,7 @@ export default function BasicTableOne() {
               <Button variant="outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={handleSave}>
+              <Button variant="primary" onClick={handleSubsidySave}>
                 Add Subsidy
               </Button>
             </div>

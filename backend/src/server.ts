@@ -16,6 +16,18 @@ app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "Backend is running" });
 });
 
+app.get("/api/subsidies", async (req: Request, res: Response) => {
+    try {
+    const [rows] = await pool.query(
+      "SELECT * FROM tbl_subsidy"
+    );
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Database error" });
+  }
+});
+
 // Search beneficiaries
 app.get("/api/beneficiaries", async (req: Request, res: Response) => {
   const { hhid } = req.query;
@@ -87,6 +99,33 @@ app.put("/api/tag/:id", async (req: Request, res: Response) =>{
   }
   catch(error){
     console.error("❌ UPDATE ERROR:", error);
+    res.status(500).json({ message: "Database error" });
+  }
+});
+
+app.post("/api/subsidy-link", async (req: Request, res: Response) => {
+  const {
+    subsidy_id_link,
+    roster_id_link,
+    entry_id_link,
+    user_id
+  } = req.body;
+
+  try {
+    const [result]: any = await pool.query(
+      `INSERT INTO tblroster_subsidy_link
+       (subsidy_id_link, roster_id_link, entry_id_link, user_id, date_modified)
+       VALUES (?, ?, ?, ?, NOW())`,
+      [subsidy_id_link, roster_id_link, entry_id_link, user_id]
+    );
+
+    res.status(201).json({
+      message: "Subsidy link inserted successfully",
+      insertedId: result.insertId,
+    });
+
+  } catch (error) {
+    console.error("❌ INSERT ERROR:", error);
     res.status(500).json({ message: "Database error" });
   }
 });
